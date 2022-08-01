@@ -1,4 +1,5 @@
 import ReactPlayer from 'react-player'
+import React from 'react'
 import { io } from 'socket.io-client'
 import { useState, useEffect } from 'react'
 
@@ -21,26 +22,30 @@ const App = () => {
     setPlayState(false)
   }
 
-  const seekEvent = () => {
-    console.log("Seeking!")
+  const bufferEvent = () => {
+    console.log("Video buffer!")
   }
 
+  //needed for instance methods. called using ref.current.{methodname}
+  const ref = React.createRef()
+  
   useEffect(() => {
     socket.emit('video-control', playState)
   }, [playState])
-
 
   return (
     <div>
       <ReactPlayer
         url='https://youtu.be/rb13bEEwv20'
+        ref={ref}
         controls={true}
         onPlay={startEvent}
         onPause={pauseEvent}
-        onSeek={seekEvent}
+        onBuffer={bufferEvent}
         playing={playState}
         muted={true}
       />
+      <button onClick={() => console.log(ref.current.getCurrentTime())}>The seeker</button>
     </div>
   );
 }
