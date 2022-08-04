@@ -6,7 +6,16 @@ const io = require('socket.io')(3001, {
 
 io.on('connection', socket => {
     console.log(socket.id)
+
     socket.on('video-control', playState => {
         socket.broadcast.emit('video-state', playState)
+    })
+
+    socket.on('sync-queue', queue => {
+        socket.broadcast.emit('update-queue', queue)
+    })
+    
+    socket.on('current-vid', newUrl => {
+        socket.broadcast.emit('update-current-vid', newUrl)
     })
 })
