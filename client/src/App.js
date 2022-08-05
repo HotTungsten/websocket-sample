@@ -37,6 +37,10 @@ const App = () => {
     setQueueItem(newQueue)
   })
 
+  socket.on('get-current-queue', () => {
+    socket.emit('sync-queue', queue)
+  })
+
   socket.on('update-current-vid', newUrl => {
     setCurrUrl(newUrl)
   })
@@ -53,13 +57,6 @@ const App = () => {
       console.log(url)
     }
   }
-
-  /*
-  useEffect(() => {
-    socket.emit('sync-queue', queue)
-    console.log('e')
-  }, [queue])
-  */
 
   const playNext = () => {
     if(queue.length > 0) {
