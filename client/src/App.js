@@ -8,6 +8,8 @@ import { useState, useEffect } from 'react'
 const socket = io.connect('http://localhost:3001')
 
 const App = () => {
+
+  //video syncing
   const [playState, setPlayState] = useState(false)
 
   socket.on('video-state', playState => {
@@ -29,6 +31,7 @@ const App = () => {
     socket.emit('video-control', playState)
   }, [playState])
 
+  //video queue 
   const [queue, setQueueItem] = useState([])
   const [urlInput, setUrlInput] = useState('')
   const [currUrl, setCurrUrl] = useState('https://youtu.be/SVi3-PrQ0pY')
@@ -43,6 +46,9 @@ const App = () => {
 
   socket.on('update-current-vid', newUrl => {
     setCurrUrl(newUrl)
+    if(queue.length > 0) {
+      queue.shift()
+    }
   })
   
   const addQueueEvent = (url) => {
@@ -60,10 +66,13 @@ const App = () => {
 
   const playNext = () => {
     if(queue.length > 0) {
-      setCurrUrl(queue.shift())
+      let newVid = queue.shift()
+      socket.emit('current-vid', newVid)
+      setCurrUrl(newVid)
     }
   }
-  
+
+
   //needed for instance methods. called using ref.current.{methodname}
   const ref = React.createRef()
 
@@ -93,6 +102,7 @@ const App = () => {
       <ul>
         {queue.map(url => <li key={Math.random() * 100}>
           <a href={url} target="_blank">{url}</a>
+          <button>Remove from queue</button>
         </li>)}
       </ul>
     </div>
