@@ -72,39 +72,56 @@ const App = () => {
     }
   }
 
+  //messaging system
+  const [chat, setNewChat] = useState([])
 
   //needed for instance methods. called using ref.current.{methodname}
   const ref = React.createRef()
 
   return (
-    <div>
-      <ReactPlayer
-        url={currUrl}
-        ref={ref}
-        controls={true}
-        onPlay={startEvent}
-        onPause={pauseEvent}
-        onEnded={playNext}
-        playing={playState}
-        onProgress={e => console.log(e)}
-        muted={true}
-      />
-      <input
-        type="url"
-        name="url"
-        id="url-input"
-        placeholder="Enter video url"
-        value={urlInput}
-        onChange={({target}) => setUrlInput(target.value)}
-      />
-      <button onClick={() => addQueueEvent(urlInput)}>Add to queue</button>
-      <button onClick={playNext}>Skip</button>
-      <ul>
-        {queue.map(url => <li key={Math.random() * 100}>
-          <a href={url} target="_blank">{url}</a>
-          <button>Remove from queue</button>
-        </li>)}
-      </ul>
+    <div class="container">
+      {/* Splitting left and right for ease of display. Dont judge me >:( */}
+      <div class="left">
+        <div class="player">
+          <ReactPlayer
+            url={currUrl}
+            ref={ref}
+            controls={true}
+            onPlay={startEvent}
+            onPause={pauseEvent}
+            onEnded={playNext}
+            playing={playState}
+            onProgress={e => console.log(e)}
+            muted={true}
+          />
+        </div>
+        <div class="playlist">
+          <input
+            type="url"
+            name="url"
+            id="url-input"
+            placeholder="Enter video url"
+            value={urlInput}
+            onChange={({target}) => setUrlInput(target.value)}
+          />
+          <button onClick={() => addQueueEvent(urlInput)}>Add to queue</button>
+          <button onClick={playNext}>Skip</button>
+          <ul>
+            {queue.map(url => <li key={Math.random() * 100}>
+              <a href={url} target="_blank">{url}</a>
+              <button>Remove from queue</button>
+            </li>)}
+          </ul>
+        </div>
+      </div>
+      <div class="right">
+        <div class="chat-box">
+          
+        </div>
+        <div class="chat-input">
+
+        </div>
+      </div>
     </div>
   );
 }
